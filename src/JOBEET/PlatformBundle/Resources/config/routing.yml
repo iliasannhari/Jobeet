@@ -1,16 +1,22 @@
-jobeet_platform_homepage:
-    path:     /
-    defaults: { _controller: JOBEETPlatformBundle:Default:index }
 
 
-oc_platform_home:
+jobeet_platform_home:
     path:      /platform
-    defaults: { _controller: OCPlatformBundle:Advert:index }
+    defaults: { _controller: JOBEETPlatformBundle:Advert:index }
     
-oc_platform_view:
+jobeet_platform_view:
     path:      /platform/advert/{id}
-    defaults: { _controller: OCPlatformBundle:Advert:view }
+    defaults: { _controller: JOBEETPlatformBundle:Advert:view }
     
-oc_platform_add:
+jobeet_platform_add:
     path:      /platform/add
-    defaults: { _controller: OCPlatformBundle:Advert:add }
+    defaults: { _controller: JOBEETPlatformBundle:Advert:add }
+
+jobeet_platform_view_slug:
+    path:      /platform/{year}/{slug}.{format}
+    defaults:
+        _controller: JOBEETPlatformBundle:Advert:viewSlug
+        format:      html
+    requirements:
+        year:   \d{4}
+        format: html|xml

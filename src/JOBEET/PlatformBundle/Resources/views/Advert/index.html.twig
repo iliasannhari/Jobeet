@@ -1,16 +1,10 @@
-{# src/OC/PlatformBundle/Resources/views/Advert/index.html.twig #}
+{# src/JOBEET/PlatformBundle/Resources/views/Advert/index.html.twig #}
 
+{% extends "JOBEETPlatformBundle::layout.html.twig" %}
 
+{% block title %}{{ parent() }} - Index Page{% endblock %}
 
-
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Bienvenue dans Symfony2 !</title>
-</head>
-<body>
-	<h1>HELOO index</h1>
-	
-
-</body>
-</html>
+{% block body %}
+	<h1>HELOO Index</h1>
+  Notre plateforme est un peu vide pour le moment, mais cela viendra !
+{% endblock %}

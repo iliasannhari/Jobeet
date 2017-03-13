@@ -1,16 +1,16 @@
-{# src/OC/PlatformBundle/Resources/views/Advert/index.html.twig #}
+{# src/JOBEET/PlatformBundle/Resources/views/Advert/add.html.twig #}
 
+{% extends "JOBEETPlatformBundle::layout.html.twig" %}
 
+{% block title %}{{ parent() }} - Add Page{% endblock %}
 
+{% block body %}
+<h2>Ajouter une annonce</h2>
 
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Bienvenue dans Symfony2 !</title>
-</head>
-<body>
-	<h1>HELOO add</h1>
-	
+{{ include("JOBEETPlatformBundle:Advert:form.html.twig") }}
 
-</body>
-</html>
+<p>
+	Attention : cette annonce sera ajoutée directement
+	sur la page d'accueil après validation du formulaire.
+</p>
+{% endblock %}

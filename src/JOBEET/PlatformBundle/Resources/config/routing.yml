@@ -41,7 +41,7 @@ jobeet_platform_delete:
 
 
 
-jobeet_platform_:
+jobeet_platform_link:
     path:      /link
     defaults: { _controller: JOBEETPlatformBundle:Advert:link }
 

@@ -1,6 +1,4 @@
 
-
-
 jobeet_platform_home:
     path:      /{page}
     defaults:
@@ -8,7 +6,7 @@ jobeet_platform_home:
         page:        1
     requirements:
         page: \d*
-    
+
 jobeet_platform_view:
     path:      /advert/{id}
     defaults:
@@ -34,24 +32,3 @@ jobeet_platform_delete:
         _controller: JOBEETPlatformBundle:Advert:delete
     requirements:
         id: \d+
-
-
-
-
-
-
-
-jobeet_platform_link:
-    path:      /link
-    defaults: { _controller: JOBEETPlatformBundle:Advert:link }
-
-
-
-jobeet_platform_view_slug:
-    path:      /{year}/{slug}.{format}
-    defaults:
-        _controller: JOBEETPlatformBundle:Advert:viewSlug
-        format:      html
-    requirements:
-        year:   \d{4}
-        _format: html|xml

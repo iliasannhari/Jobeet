@@ -1,22 +1,57 @@
 
 
+
 jobeet_platform_home:
-    path:      /platform
-    defaults: { _controller: JOBEETPlatformBundle:Advert:index }
+    path:      /{page}
+    defaults:
+        _controller: JOBEETPlatformBundle:Advert:index
+        page:        1
+    requirements:
+        page: \d*
     
 jobeet_platform_view:
-    path:      /platform/advert/{id}
-    defaults: { _controller: JOBEETPlatformBundle:Advert:view }
-    
+    path:      /advert/{id}
+    defaults:
+        _controller: JOBEETPlatformBundle:Advert:view
+    requirements:
+        id: \d+
+
 jobeet_platform_add:
-    path:      /platform/add
-    defaults: { _controller: JOBEETPlatformBundle:Advert:add }
+    path:      /add
+    defaults:
+        _controller: JOBEETPlatformBundle:Advert:add
+
+jobeet_platform_edit:
+    path:      /edit/{id}
+    defaults:
+        _controller: JOBEETPlatformBundle:Advert:edit
+    requirements:
+        id: \d+
+
+jobeet_platform_delete:
+    path:      /delete/{id}
+    defaults:
+        _controller: JOBEETPlatformBundle:Advert:delete
+    requirements:
+        id: \d+
+
+
+
+
+
+
+
+jobeet_platform_:
+    path:      /link
+    defaults: { _controller: JOBEETPlatformBundle:Advert:link }
+
+
 
 jobeet_platform_view_slug:
-    path:      /platform/{year}/{slug}.{format}
+    path:      /{year}/{slug}.{format}
     defaults:
         _controller: JOBEETPlatformBundle:Advert:viewSlug
         format:      html
     requirements:
         year:   \d{4}
-        format: html|xml
+        _format: html|xml

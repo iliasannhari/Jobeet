@@ -1,4 +1,4 @@
 jobeet_platform:
     resource: "@JOBEETPlatformBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /platform
 

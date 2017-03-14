@@ -51,54 +51,51 @@ class AdvertController extends Controller
 	{
     // Ici, on récupérera l'annonce correspondante à l'id $id
 		$advert = array(
-      'title'   => 'Recherche développpeur Symfony2',
-      'id'      => $id,
-      'author'  => 'Alexandre',
-      'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
-      'date'    => new \Datetime()
-    );
+			'title'   => 'Recherche développpeur Symfony2',
+			'id'      => $id,
+			'author'  => 'Alexandre',
+			'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
+			'date'    => new \Datetime()
+			);
 
-    return $this->render('JOBEETPlatformBundle:Advert:view.html.twig', array(
-      'advert' => $advert
-    ));
+		return $this->render('JOBEETPlatformBundle:Advert:view.html.twig', array(
+			'advert' => $advert
+			));
 		
 	}
 
 	public function addAction( Request $request)
 	{
-    
-
-
 
 		$advert = array(
-      'title'   => 'Recherche développpeur Symfony',
-      'id'      => 0,
-      'author'  => 'Alexandre',
-      'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
-      'date'    => new \Datetime()
-    );
+			'title'   => 'Recherche développpeur Symfony',
+			'id'      => 0,
+			'author'  => 'Alexandre',
+			'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
+			'date'    => new \Datetime()
+			);
 
-    return $this->render('JOBEETPlatformBundle:Advert:add.html.twig', array(
-      'advert' => $advert
-    ));
+		return $this->render('JOBEETPlatformBundle:Advert:add.html.twig', array(
+			'advert' => $advert
+			));
 	}
 
 	public function editAction($id, Request $request)
 	{
 
-		 $advert = array(
-      'title'   => 'Recherche développpeur Symfony',
-      'id'      => $id,
-      'author'  => 'Alexandre',
-      'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
-      'date'    => new \Datetime()
-    );
+		$advert = array(
+			'title'   => 'Recherche développpeur Symfony',
+			'id'      => $id,
+			'author'  => 'Alexandre',
+			'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
+			'date'    => new \Datetime()
+			);
 
-    return $this->render('JOBEETPlatformBundle:Advert:edit.html.twig', array(
-      'advert' => $advert
-    ));
+		return $this->render('JOBEETPlatformBundle:Advert:edit.html.twig', array(
+			'advert' => $advert
+			));
 
-    
+
 	}
 
 	public function deleteAction($id)

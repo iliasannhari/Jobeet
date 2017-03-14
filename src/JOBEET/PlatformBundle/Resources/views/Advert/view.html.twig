@@ -2,22 +2,32 @@
 
 {% extends "JOBEETPlatformBundle::layout.html.twig" %}
 
-{% block title %}{{ parent() }} - View Page{% endblock %}
+{% block title %}
+Lecture d'une annonce - {{ parent() }}
+{% endblock %}
 
-{% block body %}
-<h1>HELOO View</h1>
-Notre plateforme est un peu vide pour le moment, mais cela viendra !
-<h1>view: Affichage de l'annonce n°{{ id }} !</h1>
+{% block jobeetplatform_body %}
 
-<div>
-  {# On affiche tous les messages flash dont le nom est « info » #}
-  {% for message in app.session.flashbag.get('info') %}
-  <p>Message flash : {{ message }}</p>
-  {% endfor %}
+<h2>{{ advert.title }}</h2>
+<i>Par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}</i>
+
+<div class="well">
+	{{ advert.content }}
 </div>
 
 <p>
-  Ici nous pourrons lire l'annonce ayant comme id : {{ id }}<br />
-  Mais pour l'instant, nous ne savons pas encore le faire, cela viendra !
+	<a href="{{ path('jobeet_platform_home') }}" class="btn btn-default">
+		<i class="glyphicon glyphicon-chevron-left"></i>
+		Retour à la liste
+	</a>
+	<a href="{{ path('jobeet_platform_edit', {'id': advert.id}) }}" class="btn btn-default">
+		<i class="glyphicon glyphicon-edit"></i>
+		Modifier l'annonce
+	</a>
+	<a href="{{ path('jobeet_platform_delete', {'id': advert.id}) }}" class="btn btn-danger">
+		<i class="glyphicon glyphicon-trash"></i>
+		Supprimer l'annonce
+	</a>
 </p>
+
 {% endblock %}

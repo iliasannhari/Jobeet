@@ -2,15 +2,27 @@
 
 {% extends "JOBEETPlatformBundle::layout.html.twig" %}
 
-{% block title %}{{ parent() }} - Edit Page{% endblock %}
 
-{% block body %}
-<h2>Edit une annonce</h2>
+{% block title %}
+  Modifier une annonce - {{ parent() }}
+{% endblock %}
 
-{{ include("JOBEETPlatformBundle:Advert:form.html.twig") }}
+{% block jobeetplatform_body %}
 
-<p>
-	Attention : cette annonce sera ajoutée directement
-	sur la page d'accueil après validation du formulaire.
-</p>
+  <h2>Modifier une annonce</h2>
+
+  {{ include("JOBEETPlatformBundle:Advert:form.html.twig") }}
+
+  <p>
+    Vous éditez une annonce déjà existante, merci de ne pas changer
+    l'esprit général de l'annonce déjà publiée.
+  </p>
+
+  <p>
+    <a href="{{ path('jobeet_platform_view', {'id': advert.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à l'annonce
+    </a>
+  </p>
+
 {% endblock %}

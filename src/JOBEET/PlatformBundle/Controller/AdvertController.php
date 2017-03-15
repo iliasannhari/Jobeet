@@ -3,6 +3,8 @@
 namespace JOBEET\PlatformBundle\Controller;
 
 use JOBEET\PlatformBundle\Entity\Advert;
+use JOBEET\PlatformBundle\Entity\Image;
+
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,27 +72,33 @@ class AdvertController extends Controller
 
 	public function addAction( Request $request)
 	{
-		// Création de l'entité
-		$advert1 = new Advert();
-		$advert1->setTitle('Recherche designer Symfony.');
-		$advert1->setAuthor('Davis');
-		$advert1->setContent("ADvertim recherchons un développeur Symfony débutant sur Lyon. Blabla…");
-    // On peut ne pas définir ni la date ni la publication,
-    // car ces attributs sont définis automatiquement dans le constructeur
+		// Création de l'entité Advert
+		$advert = new Advert();
+		$advert->setTitle('Recherche Intégrateur Symfony.');
+		$advert->setAuthor('Maxime');
+		$advert->setContent("PostAgency recherchons un développeur Symfony débutant sur Lyon. Blabla…");
+
+    // Création de l'entité Image
+		$image = new Image();
+		$image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
+		$image->setAlt('Job de rêve');
+
+    // On lie l'image à l'annonce
+		$advert->setImage($image);
 
     // On récupère l'EntityManager
 		$em = $this->getDoctrine()->getManager();
 
     // Étape 1 : On « persiste » l'entité
-		$em->persist($advert1);
+		$em->persist($advert);
 
-		$advert2 = $em->getRepository('JOBEETPlatformBundle:Advert')->find(1);
-		$advert2->setDate(new \Datetime());
+    // Étape 1 bis : si on n'avait pas défini le cascade={"persist"},
+    // on devrait persister à la main l'entité $image
+    // $em->persist($image);
 
-
-
-    // Étape 2 : On « flush » tout ce qui a été persisté avant
+    // Étape 2 : On déclenche l'enregistrement
 		$em->flush();
+		
 
     // Reste de la méthode qu'on avait déjà écrit
 		if ($request->isMethod('POST')) {
@@ -101,7 +109,7 @@ class AdvertController extends Controller
 		}
 
     // Si on n'est pas en POST, alors on affiche le formulaire
-		return $this->render('JOBEETPlatformBundle:Advert:add.html.twig', array('advert' => $advert1));
+		return $this->render('JOBEETPlatformBundle:Advert:add.html.twig', array('advert' => $advert));
 	}
 
 	public function editAction($id, Request $request)

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Advert
  *
- * @ORM\Table(name="advert")
+ * @ORM\Table(name="jobeet_advert")
  * @ORM\Entity(repositoryClass="JOBEET\PlatformBundle\Repository\AdvertRepository")
  */
 class Advert
@@ -53,6 +53,11 @@ class Advert
    * @ORM\Column(name="published", type="boolean")
    */
     private $published = true;
+
+    /**
+   * @ORM\OneToOne(targetEntity="JOBEET\PlatformBundle\Entity\Image", cascade={"persist"})
+   */
+    private $image;
 
 
 
@@ -192,5 +197,29 @@ class Advert
     public function getPublished()
     {
         return $this->published;
+    }
+
+    /**
+     * Set image
+     *
+     * @param Image $image
+     *
+     * @return Advert
+     */
+    public function setImage(Image $image = null)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return Image
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 }

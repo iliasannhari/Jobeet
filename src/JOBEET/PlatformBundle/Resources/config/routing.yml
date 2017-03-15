@@ -32,3 +32,10 @@ jobeet_platform_delete:
         _controller: JOBEETPlatformBundle:Advert:delete
     requirements:
         id: \d+
+
+jobeet_platform_editImage:
+    path:      /editImage/{advertId}
+    defaults:
+        _controller: JOBEETPlatformBundle:Image:editImage
+    requirements:
+        advertId: \d+

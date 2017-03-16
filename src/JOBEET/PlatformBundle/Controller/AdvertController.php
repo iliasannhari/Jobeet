@@ -4,6 +4,7 @@ namespace JOBEET\PlatformBundle\Controller;
 
 use JOBEET\PlatformBundle\Entity\Advert;
 use JOBEET\PlatformBundle\Entity\Image;
+use JOBEET\PlatformBundle\Entity\Application;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -53,10 +54,11 @@ class AdvertController extends Controller
 
 	public function viewAction($id)
 	{
-		$advert = $this->getDoctrine()
-		->getManager()
-		->find('JOBEETPlatformBundle:Advert', $id)
-		;
+		
+		$em = $this->getDoctrine()->getManager();
+
+    // On récupère l'annonce $id
+    $advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
 
     // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
     // ou null si l'id $id  n'existe pas, d'où ce if :
@@ -64,19 +66,25 @@ class AdvertController extends Controller
 			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
 		}
 
+		$listApplications = $em
+		->getRepository('JOBEETPlatformBundle:Application')
+		->findBy(array('advert' => $advert))
+		;
+
     // Le render ne change pas, on passait avant un tableau, maintenant un objet
 		return $this->render('JOBEETPlatformBundle:Advert:view.html.twig', array(
-			'advert' => $advert
-			));
+      'advert'           => $advert,
+      'listApplications' => $listApplications
+    ));
 	}
 
 	public function addAction( Request $request)
 	{
 		// Création de l'entité Advert
 		$advert = new Advert();
-		$advert->setTitle('Recherche Intégrateur Symfony.');
-		$advert->setAuthor('Maxime');
-		$advert->setContent("PostAgency recherchons un développeur Symfony débutant sur Lyon. Blabla…");
+		$advert->setTitle('Recherche Fullstack developer Symfony.');
+		$advert->setAuthor('Albert');
+		$advert->setContent("BNPBANK SWISS recherchons un développeur Symfony débutant sur Lyon. Blabla…");
 
     // Création de l'entité Image
 		$image = new Image();
@@ -86,11 +94,31 @@ class AdvertController extends Controller
     // On lie l'image à l'annonce
 		$advert->setImage($image);
 
+		// Création d'une première candidature
+		$application1 = new Application();
+		$application1->setAuthor('Marine');
+		$application1->setContent("J'ai toutes les qualités requises.");
+
+    // Création d'une deuxième candidature par exemple
+		$application2 = new Application();
+		$application2->setAuthor('Pierre');
+		$application2->setContent("Je suis très motivé.");
+
+    // On lie les candidatures à l'annonce
+		$application1->setAdvert($advert);
+		$application2->setAdvert($advert);
+
+
     // On récupère l'EntityManager
 		$em = $this->getDoctrine()->getManager();
 
     // Étape 1 : On « persiste » l'entité
 		$em->persist($advert);
+
+		// Étape 1 ter : pour cette relation pas de cascade lorsqu'on persiste Advert, car la relation est
+    // définie dans l'entité Application et non Advert. On doit donc tout persister à la main ici.
+		$em->persist($application1);
+		$em->persist($application2);
 
     // Étape 1 bis : si on n'avait pas défini le cascade={"persist"},
     // on devrait persister à la main l'entité $image

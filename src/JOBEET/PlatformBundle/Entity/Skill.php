@@ -1,17 +1,15 @@
 <?php
-// src/JOBEET/PlatformBundle/Entity/Category.php
+// src/JOBEET/PlatformBundle/Entity/Skill.php
 
 namespace JOBEET\PlatformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Category
- *
- * @ORM\Table(name="jobeet_category")
- * @ORM\Entity(repositoryClass="JOBEET\PlatformBundle\Entity\CategoryRepository")
+ * @ORM\Entity
+ * @ORM\Table(name="jobeet_skill")
  */
-class Category
+class Skill
 {
   /**
    * @ORM\Column(name="id", type="integer")

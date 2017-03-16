@@ -5,6 +5,7 @@ namespace JOBEET\PlatformBundle\Controller;
 use JOBEET\PlatformBundle\Entity\Advert;
 use JOBEET\PlatformBundle\Entity\Image;
 use JOBEET\PlatformBundle\Entity\Application;
+use JOBEET\PlatformBundle\Entity\AdvertSkill;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -71,15 +72,26 @@ class AdvertController extends Controller
 		->findBy(array('advert' => $advert))
 		;
 
+		 // On récupère maintenant la liste des AdvertSkill
+		$listAdvertSkills = $em
+		->getRepository('JOBEETPlatformBundle:AdvertSkill')
+		->findBy(array('advert' => $advert))
+		;
+
     // Le render ne change pas, on passait avant un tableau, maintenant un objet
 		return $this->render('JOBEETPlatformBundle:Advert:view.html.twig', array(
 			'advert'           => $advert,
-			'listApplications' => $listApplications
+			'listApplications' => $listApplications,
+			'listAdvertSkills' => $listAdvertSkills
 			));
 	}
 
 	public function addAction( Request $request)
 	{
+		// On récupère l'EntityManager
+		$em = $this->getDoctrine()->getManager();
+
+		
 		// Création de l'entité Advert
 		$advert = new Advert();
 		$advert->setTitle('Recherche Fullstack developer Symfony.');
@@ -108,9 +120,27 @@ class AdvertController extends Controller
 		$application1->setAdvert($advert);
 		$application2->setAdvert($advert);
 
+		// On récupère toutes les compétences possibles
+		$listSkills = $em->getRepository('JOBEETPlatformBundle:Skill')->findAll();
 
-    // On récupère l'EntityManager
-		$em = $this->getDoctrine()->getManager();
+    // Pour chaque compétence
+		foreach ($listSkills as $skill) {
+      // On crée une nouvelle « relation entre 1 annonce et 1 compétence »
+			$advertSkill = new AdvertSkill();
+
+      // On la lie à l'annonce, qui est ici toujours la même
+			$advertSkill->setAdvert($advert);
+      // On la lie à la compétence, qui change ici dans la boucle foreach
+			$advertSkill->setSkill($skill);
+
+      // Arbitrairement, on dit que chaque compétence est requise au niveau 'Expert'
+			$advertSkill->setLevel('Expert');
+
+      // Et bien sûr, on persiste cette entité de relation, propriétaire des deux autres relations
+			$em->persist($advertSkill);
+		}
+
+    
 
     // Étape 1 : On « persiste » l'entité
 		$em->persist($advert);

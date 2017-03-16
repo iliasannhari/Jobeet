@@ -22,13 +22,22 @@ Lecture d'une annonce - {{ parent() }}
 <h3>Listes des applications pour cette annonce : </h3>
 <div class="well">
 	<ul>
-	{% for app in listApplications %}
+		{% for app in listApplications %}
 		<li> <b> {{ app.author }} </b> : {{ app.content }} - <small> {{ app.date|date('Y-m-d') }} </small></li>
 		{% else %}
 		<li>Pas d'applications trouvées.</li>
 		{% endfor %}
 	</ul>
 </div>
+
+{% if not advert.categories.empty %}
+<p>
+	Cette annonce est parue dans les catégories suivantes :
+	{% for category in advert.categories %}
+	{{ category.name }}{% if not loop.last %}, {% endif %}
+	{% endfor %}
+</p>
+{% endif %}
 
 <p>
 	<a href="{{ path('jobeet_platform_home') }}" class="btn btn-default">

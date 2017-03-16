@@ -2,6 +2,8 @@
 
 namespace JOBEET\PlatformBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -59,13 +61,22 @@ class Advert
    */
     private $image;
 
+    /**
+   * @ORM\ManyToMany(targetEntity="JOBEET\PlatformBundle\Entity\Category", cascade={"persist"})
+   * @ORM\JoinTable(name="jobeet_advert_category")
+   */
+    private $categories;
+
 
 
 
     public function __construct()
     {
-    // Par défaut, la date de l'annonce est la date d'aujourd'hui
+        // Par défaut, la date de l'annonce est la date d'aujourd'hui
+        // Comme la propriété $categories doit être un ArrayCollection,
+        // On doit la définir dans un constructeur :
         $this->date = new \Datetime();
+        $this->categories = new ArrayCollection();
     }
 
     
@@ -221,5 +232,39 @@ class Advert
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * Add category
+     *
+     * @param Category $category
+     *
+     * @return Advert
+     */
+    public function addCategory(Category $category)
+    {
+        $this->categories[] = $category;
+
+        return $this;
+    }
+
+    /**
+     * Remove category
+     *
+     * @param Category $category
+     */
+    public function removeCategory(Category $category)
+    {
+        $this->categories->removeElement($category);
+    }
+
+    /**
+     * Get categories
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCategories()
+    {
+        return $this->categories;
     }
 }

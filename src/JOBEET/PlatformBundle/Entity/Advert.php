@@ -67,6 +67,11 @@ class Advert
    */
     private $categories;
 
+    /**
+   * @ORM\OneToMany(targetEntity="JOBEET\PlatformBundle\Entity\Application", mappedBy="advert")
+   */
+    private $applications; // Notez le « s », une annonce est liée à plusieurs candidatures
+
 
 
 
@@ -77,9 +82,10 @@ class Advert
         // On doit la définir dans un constructeur :
         $this->date = new \Datetime();
         $this->categories = new ArrayCollection();
+        $this->applications = new ArrayCollection();
     }
 
-    
+
     /**
      * Get id
      *
@@ -266,5 +272,44 @@ class Advert
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    /**
+     * Add application
+     *
+     * @param Application $application
+     *
+     * @return Advert
+     */
+    public function addApplication(Application $application)
+    {
+        $this->applications[] = $application;
+
+        // On lie l'annonce à la candidature
+        $application->setAdvert($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove application
+     *
+     * @param Application $application
+     */
+    public function removeApplication(Application $application)
+    {
+        $this->applications->removeElement($application);
+        // Et si notre relation était facultative (nullable=true, ce qui n'est pas notre cas ici attention) :        
+    // $application->setAdvert(null);
+    }
+
+    /**
+     * Get applications
+     *
+     * @return Collection
+     */
+    public function getApplications()
+    {
+        return $this->applications;
     }
 }

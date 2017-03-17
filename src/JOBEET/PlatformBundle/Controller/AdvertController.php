@@ -27,30 +27,26 @@ class AdvertController extends Controller
 
 	public function indexAction($page)
 	{
-     // Notre liste d'annonce en dur
-		$listAdverts = array(
-			array(
-				'title'   => 'Recherche développpeur Symfony',
-				'id'      => 1,
-				'author'  => 'Alexandre',
-				'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
-				'date'    => new \Datetime()),
-			array(
-				'title'   => 'Mission de webmaster',
-				'id'      => 2,
-				'author'  => 'Hugo',
-				'content' => 'Nous recherchons un webmaster capable de maintenir notre site internet. Blabla…',
-				'date'    => new \Datetime()),
-			array(
-				'title'   => 'Offre de stage webdesigner',
-				'id'      => 3,
-				'author'  => 'Mathieu',
-				'content' => 'Nous proposons un poste pour webdesigner. Blabla…',
-				'date'    => new \Datetime())
-			);
+
+		$listAdverts = $this
+		->getDoctrine()
+		->getManager()
+		->getRepository('JOBEETPlatformBundle:Advert')
+		->getAdvertWithCategories(array('VR', 'FullStack'))
+		;
+
+		foreach ($listAdverts as $advert) {
+		    // Ne déclenche pas de requête : les candidatures sont déjà chargées !
+		    // Vous pourriez faire une boucle dessus pour les afficher toutes
+			$advert->getApplications();
+		}
+
+
 		return $this->render('JOBEETPlatformBundle:Advert:index.html.twig', array(
 			'listAdverts' => $listAdverts
 			));
+
+		
 	}
 
 	public function viewAction($id)
@@ -140,7 +136,7 @@ class AdvertController extends Controller
 			$em->persist($advertSkill);
 		}
 
-    
+
 
     // Étape 1 : On « persiste » l'entité
 		$em->persist($advert);
@@ -243,6 +239,19 @@ class AdvertController extends Controller
 			'listAdverts' => $listAdverts
 			));
 	}
+
+	public function testAction()
+	{
+		$repository = $this
+		->getDoctrine()
+		->getManager()
+		->getRepository('JOBEETPlatformBundle:Advert')
+		;
+
+		$listAdverts =$repository->myFindAll();
+	}
+
+
 
 
 

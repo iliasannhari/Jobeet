@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Category
  *
  * @ORM\Table(name="jobeet_category")
- * @ORM\Entity(repositoryClass="JOBEET\PlatformBundle\Entity\CategoryRepository")
+ * @ORM\Entity(repositoryClass="JOBEET\PlatformBundle\Repository\CategoryRepository")
  */
 class Category
 {

@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="jobeet_advert")
  * @ORM\Entity(repositoryClass="JOBEET\PlatformBundle\Repository\AdvertRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Advert
 {
@@ -71,6 +72,11 @@ class Advert
    * @ORM\OneToMany(targetEntity="JOBEET\PlatformBundle\Entity\Application", mappedBy="advert")
    */
     private $applications; // Notez le « s », une annonce est liée à plusieurs candidatures
+
+    /**
+    * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+    */
+    private $updatedAt;
 
 
 
@@ -312,4 +318,13 @@ class Advert
     {
         return $this->applications;
     }
+
+    public function updateDate()
+    {
+        $this->setUpdatedAt(new \Datetime());
+    }
+    /**
+ * @ORM\PreUpdate
+ */
+    public function updateDate()
 }

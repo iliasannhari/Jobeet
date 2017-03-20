@@ -23,17 +23,19 @@ class ImageController extends Controller
 
   // On modifie l'URL de l'image par exemple
     	$advert->getImage()->setUrl('http://lescontournementsroutiers.be/images/voiture_qui_sourit_1.jpg');
+      $advert->setContent("set BNPBANK SWISS recherchons un développeur Symfony débutant sur Lyon. Blabla…");
+
 
   // On n'a pas besoin de persister l'annonce ni l'image.
   // Rappelez-vous, ces entités sont automatiquement persistées car
   // on les a récupérées depuis Doctrine lui-même
 
   // On déclenche la modification
-    	$em->flush();
+      $em->flush();
 
-    	return $this->render('JOBEETPlatformBundle:Advert:view.html.twig', array(
-            'advert' => $advert
-    		));
+      return $this->render('JOBEETPlatformBundle:Image:edit_image.html.twig', array(
+        'advert' => $advert
+        ));
     }
 
-}
+  }

@@ -27,12 +27,20 @@ class AdvertController extends Controller
 
 	public function indexAction($page)
 	{
-
+		/*
 		$listAdverts = $this
 		->getDoctrine()
 		->getManager()
 		->getRepository('JOBEETPlatformBundle:Advert')
 		->getAdvertWithCategories(array('VR', 'FullStack'))
+		;
+		*/
+
+		$listAdverts = $this
+		->getDoctrine()
+		->getManager()
+		->getRepository('JOBEETPlatformBundle:Advert')
+		->findAll()
 		;
 
 		foreach ($listAdverts as $advert) {
@@ -91,7 +99,7 @@ class AdvertController extends Controller
 		// Création de l'entité Advert
 		$advert = new Advert();
 		$advert->setTitle('Recherche Fullstack developer Symfony.');
-		$advert->setAuthor('Albert');
+		$advert->setAuthor('ilias.annhari@gmail.com');
 		$advert->setContent("BNPBANK SWISS recherchons un développeur Symfony débutant sur Lyon. Blabla…");
 
     // Création de l'entité Image
@@ -104,7 +112,7 @@ class AdvertController extends Controller
 
 		// Création d'une première candidature
 		$application1 = new Application();
-		$application1->setAuthor('Marine');
+		$application1->setAuthor('marine@gmail.com');
 		$application1->setContent("J'ai toutes les qualités requises.");
 
     // Création d'une deuxième candidature par exemple

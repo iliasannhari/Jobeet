@@ -10,7 +10,6 @@
 {% block jobeetplatform_body %}
 
   <h2>Liste des annonces</h2>
-
   <ul>
     {% for advert in listAdverts %}
       <li>
@@ -20,6 +19,7 @@
         par {{ advert.author }},
         le {{ advert.date|date('d/m/Y') }}
       </li>
+      <li>candidature : {{advert.nbApplications}}</li>
     {% else %}
       <li>Pas (encore !) d'annonces</li>
     {% endfor %}

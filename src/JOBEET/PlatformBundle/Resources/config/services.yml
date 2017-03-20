@@ -1,4 +1,18 @@
 
 services:
 
+    jobeet_platform.email.application_mailer:
+      class: JOBEET\PlatformBundle\Email\ApplicationMailer
+      arguments:
+          - "@mailer"
+
+    jobeet_platform.doctrine_listener.application_creation:
+        class: JOBEET\PlatformBundle\DoctrineListener\ApplicationCreationListener
+        arguments:
+          - "@jobeet_platform.email.application_mailer"
+        tags:
+          - { name: doctrine.event_listener, event: postPersist }
+
+
+
    

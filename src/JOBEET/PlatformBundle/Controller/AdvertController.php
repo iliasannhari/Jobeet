@@ -36,18 +36,19 @@ class AdvertController extends Controller
 		;
 		*/
 
+		if ($page < 1) {
+			throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
+		}
+
+
 		$listAdverts = $this
 		->getDoctrine()
 		->getManager()
 		->getRepository('JOBEETPlatformBundle:Advert')
-		->findAll()
+		->getAdverts
 		;
 
-		foreach ($listAdverts as $advert) {
-		    // Ne déclenche pas de requête : les candidatures sont déjà chargées !
-		    // Vous pourriez faire une boucle dessus pour les afficher toutes
-			$advert->getApplications();
-		}
+		
 
 
 		return $this->render('JOBEETPlatformBundle:Advert:index.html.twig', array(
@@ -99,7 +100,7 @@ class AdvertController extends Controller
 		// Création de l'entité Advert
 		$advert = new Advert();
 		$advert->setTitle('Recherche Fullstack developer Symfony.');
-		$advert->setAuthor('ilias.annhari@gmail.com');
+		$advert->setAuthor('ddzzd@gmail.com');
 		$advert->setContent("BNPBANK SWISS recherchons un développeur Symfony débutant sur Lyon. Blabla…");
 
     // Création de l'entité Image
@@ -233,13 +234,15 @@ class AdvertController extends Controller
 
 	public function menuAction($limit)
 	{
-    // On fixe en dur une liste ici, bien entendu par la suite
-    // on la récupérera depuis la BDD !
-		$listAdverts = array(
-			array('id' => 2, 'title' => 'Recherche développeur Symfony'),
-			array('id' => 5, 'title' => 'Mission de webmaster'),
-			array('id' => 9, 'title' => 'Offre de stage webdesigner')
-			);
+		$em = $this->getDoctrine()->getManager();
+
+		$listAdverts = $em->getRepository('JOBEETPlatformBundle:Advert')->findBy(
+      		array(),                 // Pas de critère
+      		array('date' => 'desc'), // On trie par date décroissante
+      		$limit,                  // On sélectionne $limit annonces
+      		0                        // À partir du premier
+      		);
+
 
 		return $this->render('JOBEETPlatformBundle:Advert:menu.html.twig', array(
       // Tout l'intérêt est ici : le contrôleur passe

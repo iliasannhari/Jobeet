@@ -17,9 +17,8 @@
           {{ advert.title }}
         </a>
         par {{ advert.author }},
-        le {{ advert.date|date('d/m/Y') }}
-      </li>
-      <li>candidature : {{advert.nbApplications}}</li>
+        le {{ advert.date|date('d/m/Y') }} (candidature : {{advert.nbApplications}}) <small> id: {{advert.id}}</small>
+      </li>      
     {% else %}
       <li>Pas (encore !) d'annonces</li>
     {% endfor %}

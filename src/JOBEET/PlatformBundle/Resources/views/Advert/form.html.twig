@@ -4,7 +4,6 @@
    elles, hériteront probablement du layout. Je dis « probablement » car,
    ici pour cette vue, on n'en sait rien et c'est une info qui ne nous concerne pas. #}
 
-   <h3>Formulaire d'annonce</h3>
 
 {# On laisse vide la vue pour l'instant, on la comblera plus tard
 lorsqu'on saura afficher un formulaire. #}
@@ -16,7 +15,9 @@ lorsqu'on saura afficher un formulaire. #}
 	{{ form_errors(form) }}
 
 	{# Génération du label + error + widget pour un champ. #}
-	{{ form_row(form.date) }}
+	{% if form.date is defined %}
+		{{ form_row(form.date) }}
+	{% endif %}
 
 	{# Génération manuelle et éclatée : #}
 	<div class="form-group">
@@ -47,23 +48,20 @@ lorsqu'on saura afficher un formulaire. #}
 			{{ form_widget(form.author, {'attr': {'class': 'form-control'}}) }}
 		</div>
 	</div>
-	{{ form_row(form.published) }}
+	{% if form.published is defined %}
+		{{ form_row(form.published) }}
+	{% endif %}
+	
 
 
 	<div class="form-group">
-		{{ form_label(form.image.url, "Image url", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-		{{ form_errors(form.image.url) }}
+		{{ form_label(form.image.file, "Image", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+		{{ form_errors(form.image.file) }}
 		<div class="col-sm-10">
-			{{ form_widget(form.image.url, {'attr': {'class': 'form-control'}}) }}
+			{{ form_widget(form.image.file, {'attr': {'class': 'form-control'}}) }}
 		</div>
 	</div>
-	<div class="form-group">
-		{{ form_label(form.image.alt, "Image alt", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-		{{ form_errors(form.image.alt) }}
-		<div class="col-sm-10">
-			{{ form_widget(form.image.alt, {'attr': {'class': 'form-control'}}) }}
-		</div>
-	</div>
+	
 	{{ form_row(form.categories) }}
 
 	{# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}

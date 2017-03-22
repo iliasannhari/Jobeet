@@ -8,7 +8,7 @@ use JOBEET\PlatformBundle\Entity\Application;
 use JOBEET\PlatformBundle\Entity\AdvertSkill;
 
 use JOBEET\PlatformBundle\Form\AdvertType;
-
+use JOBEET\PlatformBundle\Form\AdvertEditType;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -117,6 +117,7 @@ class AdvertController extends Controller
 		$form   = $this->get('form.factory')->create(AdvertType::class, $advert);
 
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($advert);
 			$em->flush();
@@ -126,9 +127,7 @@ class AdvertController extends Controller
 			return $this->redirectToRoute('jobeet_platform_view', array('id' => $advert->getId()));
 		}
 
-		return $this->render('JOBEETPlatformBundle:Advert:add.html.twig', array(
-			'form' => $form->createView(),
-			));
+		
 
 		return $this->render('JOBEETPlatformBundle:Advert:add.html.twig', array(
 			'form' => $form->createView(),
@@ -136,7 +135,38 @@ class AdvertController extends Controller
 
 	}
 
-	public function deleteAction($id)
+	public function editAction( Request $request, $id)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
+
+		if (null === $advert) {
+			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+		}
+		
+		$form   = $this->get('form.factory')->create(AdvertEditType::class, $advert);
+
+		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+			// Inutile de persister ici, Doctrine connait déjà notre annonce
+			$em->flush();
+
+			$request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+
+			return $this->redirectToRoute('jobeet_platform_view', array('id' => $advert->getId()));
+		}
+
+		
+
+		return $this->render('JOBEETPlatformBundle:Advert:edit.html.twig', array(
+			'advert' => $advert,
+			'form' => $form->createView(),
+			));
+
+	}
+
+
+
+	public function deleteAction(Request $request,$id)
 	{
 		$em = $this->getDoctrine()->getManager();
 
@@ -147,18 +177,19 @@ class AdvertController extends Controller
 			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
 		}
 
-    // On boucle sur les catégories de l'annonce pour les supprimer
-		foreach ($advert->getCategories() as $category) {
-			$advert->removeCategory($category);
+		$form = $this->get('form.factory')->create();
+		
+		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+			$em->remove($advert);
+			$em->flush();
+			$request->getSession()->getFlashBag()->add('info', "L'annonce a bien été supprimée.");
+			return $this->redirectToRoute('jobeet_platform_home');
 		}
 
-    // Pour persister le changement dans la relation, il faut persister l'entité propriétaire
-    // Ici, Advert est le propriétaire, donc inutile de la persister car on l'a récupérée depuis Doctrine
-
-    // On déclenche la modification
-		$em->flush();
-
-		return $this->render('JOBEETPlatformBundle:Advert:delete.html.twig');
+		return $this->render('JOBEETPlatformBundle:Advert:delete.html.twig', array(
+			'advert' => $advert,
+			'form'   => $form->createView(),
+			));
 	}
 
 	public function menuAction($limit)

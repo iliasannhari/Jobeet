@@ -1,4 +1,4 @@
-{# src/JOBEET/PlatformBundle/Resources/views/Advert/edit.html.twig #}
+{# src/JOBEET/PlatformBundle/Resources/views/Advert/add.html.twig #}
 
 {% extends "JOBEETPlatformBundle::layout.html.twig" %}
 
@@ -13,16 +13,7 @@
 
   {{ include("JOBEETPlatformBundle:Advert:form.html.twig") }}
 
-  <p>
-    Vous éditez une annonce déjà existante, merci de ne pas changer
-    l'esprit général de l'annonce déjà publiée.
-  </p>
-
-  <p>
-    <a href="{{ path('jobeet_platform_view', {'id': advert.id}) }}" class="btn btn-default">
-      <i class="glyphicon glyphicon-chevron-left"></i>
-      Retour à l'annonce
-    </a>
-  </p>
+  
+  
 
 {% endblock %}

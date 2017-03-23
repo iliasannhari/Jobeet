@@ -12,8 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use JOBEET\PlatformBundle\Validator\Antiflood;
-
 
 /**
  * Advert
@@ -62,8 +60,7 @@ class Advert
      * @var string
      *
      * @ORM\Column(name="content", type="text")
-     * @Assert\NotBlank()
-     * @Antiflood()
+     * @Assert\Length(min=10)
      */
     private $content;
 

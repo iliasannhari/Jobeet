@@ -26,9 +26,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-
-
+// N'oubliez pas ce use pour l'annotation
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 
 class AdvertController extends Controller
@@ -110,12 +111,15 @@ class AdvertController extends Controller
 			));
 	}
 
+	/**
+   	* @Security("has_role('ROLE_AUTEUR')")
+   	*/
 	public function addAction( Request $request)
 	{
 		
 		$advert = new Advert();
 		$form   = $this->get('form.factory')->create(AdvertType::class, $advert);
-
+		
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 
 			$em = $this->getDoctrine()->getManager();

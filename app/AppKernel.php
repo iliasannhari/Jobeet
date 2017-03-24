@@ -18,6 +18,7 @@ class AppKernel extends Kernel
             new JOBEET\PlatformBundle\JOBEETPlatformBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new JOBEET\UserBundle\JOBEETUserBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

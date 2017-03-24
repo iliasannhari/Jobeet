@@ -17,6 +17,13 @@
 <body>
   <div class="container">
     <div id="header" class="jumbotron">
+      {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        Connecté en tant que {{ app.user.username }}
+        -
+        <a href="{{ path('fos_user_security_logout') }}">Déconnexion</a>
+      {% else %}
+        <a href="{{ path('fos_user_security_login') }}">Connexion</a>
+      {% endif %}
       <h1>Ma plateforme d'annonces</h1>
       <p>
         Ce projet est propulsé par Symfony,

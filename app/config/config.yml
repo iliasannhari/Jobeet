@@ -77,3 +77,13 @@ stof_doctrine_extensions:
     orm:
         default:
             sluggable: true
+
+fos_user:
+    db_driver:     orm                       # Le type de BDD à utiliser, nous utilisons l'ORM Doctrine depuis le début
+    firewall_name: main                      # Le nom du firewall derrière lequel on utilisera ces utilisateurs
+    user_class:    JOBEET\UserBundle\Entity\User # La classe de l'entité User que nous utilisons
+
+    ## To solve the problem
+    from_email:
+        address: "noreply@yourcompany.com"
+        sender_name: "No Reply"

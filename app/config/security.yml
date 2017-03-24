@@ -2,18 +2,18 @@
 
 security:
   encoders:
-    Symfony\Component\Security\Core\User\User: plaintext
+    JOBEET\UserBundle\Entity\User: sha512
 
   role_hierarchy:
     ROLE_ADMIN:       [ROLE_AUTEUR, ROLE_MODERATEUR]
     ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
   providers:
-    in_memory:
-      memory:
-        users:
-          user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-          admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+    # … vous pouvez supprimer le fournisseur « in_memory »
+    # Et voici notre nouveau fournisseur :
+    main:
+      id: fos_user.user_provider.username
+       
 
   firewalls:
     dev:
@@ -22,13 +22,16 @@ security:
     main:
       pattern:    ^/
       anonymous:    true
-      provider:     in_memory
+      provider:     main
       form_login:
-        login_path: login
-        check_path: login_check
+        login_path: fos_user_security_login
+        check_path: fos_user_security_check
+        default_target_path: /platform
       logout:
-        path:       logout
+        path:       fos_user_security_logout
         target:     /platform
+      remember_me:
+        secret:     %secret% # %secret% est un paramètre de parameter
 
   access_control:
     #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

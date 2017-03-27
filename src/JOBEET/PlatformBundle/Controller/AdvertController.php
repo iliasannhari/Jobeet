@@ -31,6 +31,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 // N'oubliez pas ce use pour l'annotation
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
+
 
 class AdvertController extends Controller
 {
@@ -62,10 +65,10 @@ class AdvertController extends Controller
 
 		// On calcule le nombre total de pages grâce au count($listAdverts) qui retourne le nombre total d'annonces
 		$nbPages = ceil(count($listAdverts) / $nbPerPage);
-				
+
 		 // Si la page n'existe pas, on retourne une 404
 		
-	
+
 		if ($nbPages && $page > $nbPages) {
 			throw $this->createNotFoundException("La page ".$page." n'existe pas.");
 		}
@@ -79,6 +82,8 @@ class AdvertController extends Controller
 
 		
 	}
+
+	
 
 	public function viewAction($id)
 	{
@@ -116,93 +121,93 @@ class AdvertController extends Controller
 	/**
    	* @Security("has_role('ROLE_AUTEUR')")
    	*/
-	public function addAction( Request $request)
-	{
-		
-		$advert = new Advert();
-		$form   = $this->get('form.factory')->create(AdvertType::class, $advert);
-		
-		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+   	public function addAction( Request $request)
+   	{
 
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($advert);
-			$em->flush();
+   		$advert = new Advert();
+   		$form   = $this->get('form.factory')->create(AdvertType::class, $advert);
 
-			$request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+   		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 
-			return $this->redirectToRoute('jobeet_platform_view', array('id' => $advert->getId()));
-		}
+   			$em = $this->getDoctrine()->getManager();	
+   			$em->persist($advert);
+   			$em->flush();
 
-		
+   			$request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
 
-		return $this->render('JOBEETPlatformBundle:Advert:add.html.twig', array(
-			'form' => $form->createView(),
-			));
+   			return $this->redirectToRoute('jobeet_platform_view', array('id' => $advert->getId()));
+   		}
 
-	}
 
-	public function editAction( Request $request, $id)
-	{
-		$em = $this->getDoctrine()->getManager();
-		$advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
 
-		if (null === $advert) {
-			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
-		}
-		
-		$form   = $this->get('form.factory')->create(AdvertEditType::class, $advert);
+   		return $this->render('JOBEETPlatformBundle:Advert:add.html.twig', array(
+   			'form' => $form->createView(),
+   			));
 
-		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+   	}
+
+   	public function editAction( Request $request, $id)
+   	{
+   		$em = $this->getDoctrine()->getManager();
+   		$advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
+
+   		if (null === $advert) {
+   			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+   		}
+
+   		$form   = $this->get('form.factory')->create(AdvertEditType::class, $advert);
+
+   		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 			// Inutile de persister ici, Doctrine connait déjà notre annonce
-			$em->flush();
+   			$em->flush();
 
-			$request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+   			$request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
 
-			return $this->redirectToRoute('jobeet_platform_view', array('id' => $advert->getId()));
-		}
-
-		
-
-		return $this->render('JOBEETPlatformBundle:Advert:edit.html.twig', array(
-			'advert' => $advert,
-			'form' => $form->createView(),
-			));
-
-	}
+   			return $this->redirectToRoute('jobeet_platform_view', array('id' => $advert->getId()));
+   		}
 
 
 
-	public function deleteAction(Request $request,$id)
-	{
-		$em = $this->getDoctrine()->getManager();
+   		return $this->render('JOBEETPlatformBundle:Advert:edit.html.twig', array(
+   			'advert' => $advert,
+   			'form' => $form->createView(),
+   			));
+
+   	}
+
+
+
+   	public function deleteAction(Request $request,$id)
+   	{
+   		$em = $this->getDoctrine()->getManager();
 
     // On récupère l'annonce $id
-		$advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
+   		$advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
 
-		if (null === $advert) {
-			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
-		}
+   		if (null === $advert) {
+   			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+   		}
 
-		$form = $this->get('form.factory')->create();
-		
-		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-			$em->remove($advert);
-			$em->flush();
-			$request->getSession()->getFlashBag()->add('info', "L'annonce a bien été supprimée.");
-			return $this->redirectToRoute('jobeet_platform_home');
-		}
+   		$form = $this->get('form.factory')->create();
 
-		return $this->render('JOBEETPlatformBundle:Advert:delete.html.twig', array(
-			'advert' => $advert,
-			'form'   => $form->createView(),
-			));
-	}
+   		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+   			$em->remove($advert);
+   			$em->flush();
+   			$request->getSession()->getFlashBag()->add('info', "L'annonce a bien été supprimée.");
+   			return $this->redirectToRoute('jobeet_platform_home');
+   		}
 
-	public function menuAction($limit)
-	{
-		$em = $this->getDoctrine()->getManager();
+   		return $this->render('JOBEETPlatformBundle:Advert:delete.html.twig', array(
+   			'advert' => $advert,
+   			'form'   => $form->createView(),
+   			));
+   	}
 
-		$listAdverts = $em->getRepository('JOBEETPlatformBundle:Advert')->findBy(
+   	public function menuAction($limit)
+   	{
+   		$em = $this->getDoctrine()->getManager();
+
+   		$listAdverts = $em->getRepository('JOBEETPlatformBundle:Advert')->findBy(
       		array(),                 // Pas de critère
       		array('date' => 'desc'), // On trie par date décroissante
       		$limit,                  // On sélectionne $limit annonces
@@ -210,26 +215,26 @@ class AdvertController extends Controller
       		);
 
 
-		return $this->render('JOBEETPlatformBundle:Advert:menu.html.twig', array(
+   		return $this->render('JOBEETPlatformBundle:Advert:menu.html.twig', array(
       // Tout l'intérêt est ici : le contrôleur passe
       // les variables nécessaires au template !
-			'listAdverts' => $listAdverts
-			));
-	}
+   			'listAdverts' => $listAdverts
+   			));
+   	}
 
-	public function testAction()
-	{
-		$repository = $this
-		->getDoctrine()
-		->getManager()
-		->getRepository('JOBEETPlatformBundle:Advert')
-		;
+   	public function testAction()
+   	{
+   		$repository = $this
+   		->getDoctrine()
+   		->getManager()
+   		->getRepository('JOBEETPlatformBundle:Advert')
+   		;
 
-		$listAdverts =$repository->myFindAll();
-	}
-
-
+   		$listAdverts =$repository->myFindAll();
+   	}
 
 
 
-}
+
+
+   }

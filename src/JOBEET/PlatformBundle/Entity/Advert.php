@@ -15,6 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use JOBEET\PlatformBundle\Validator\Antiflood;
 
 
+
 /**
  * Advert
  *

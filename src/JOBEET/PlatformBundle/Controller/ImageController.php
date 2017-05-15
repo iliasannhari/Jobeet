@@ -10,8 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class ImageController extends Controller
 {
-    /**
-     * @Route("/editImage")
+   /**
+     * @Route("/editImage/{advertId}", name="jobeet_platform_editImage",requirements={"id" = "\d+"})
+     *
      */
     public function editImageAction($advertId)
     {

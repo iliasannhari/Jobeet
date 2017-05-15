@@ -1,10 +1,10 @@
 
 
 
-jobeet_platform:
-    resource: "@JOBEETPlatformBundle/Resources/config/routing.yml"
-    prefix:   /platform
 
+jobeet_platform:
+    resource: "@JOBEETPlatformBundle/Controller/"
+    type:     annotation
 
 
 

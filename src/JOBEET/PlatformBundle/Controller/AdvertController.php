@@ -32,12 +32,18 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
 
 
 
 class AdvertController extends Controller
 {
 
+   /**
+     * @Route("/{page}", name="jobeet_platform_home",requirements={"page" = "\d+"}, defaults={"page" = 1})
+     *
+     */
 
 	public function indexAction($page)
 	{
@@ -54,7 +60,7 @@ class AdvertController extends Controller
 			throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
 		}
 
-		$nbPerPage = 3;
+		$nbPerPage = 10;
 
 		$listAdverts = $this
 		->getDoctrine()
@@ -84,7 +90,10 @@ class AdvertController extends Controller
 	}
 
 	
-
+   /**
+     * @Route("/view/{id}", name="jobeet_platform_view",requirements={"id" = "\d+"})
+     *
+     */
 	public function viewAction($id)
 	{
 		
@@ -118,7 +127,8 @@ class AdvertController extends Controller
 			));
 	}
 
-	/**
+	  /**
+      * @Route("/add", name="jobeet_platform_add")
    	* @Security("has_role('ROLE_AUTEUR')")
    	*/
    	public function addAction( Request $request)
@@ -145,6 +155,12 @@ class AdvertController extends Controller
    			));
 
    	}
+
+
+      /**
+      * @Route("/edit/{id}", name="jobeet_platform_edit")
+      * @Security("has_role('ROLE_AUTEUR')")
+      */
 
    	public function editAction( Request $request, $id)
    	{
@@ -175,7 +191,10 @@ class AdvertController extends Controller
 
    	}
 
-
+      /**
+      * @Route("/delete/{id}", name="jobeet_platform_delete")
+      * @Security("has_role('ROLE_AUTEUR')")
+      */
 
    	public function deleteAction(Request $request,$id)
    	{

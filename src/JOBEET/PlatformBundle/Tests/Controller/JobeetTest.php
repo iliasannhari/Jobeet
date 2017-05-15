@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 use JOBEET\PlatformBundle\Entity\Advert;
 
 
+
+
 class JobeetTest extends TestCase
 {
 	public function testSlugify()
@@ -22,7 +24,7 @@ class JobeetTest extends TestCase
 
 	public function testIndex()
 	{
-		$client = static::createClient();
+		$client = self::createClient();
 		$crawler = $client->request('GET', '/platform');
 
 		 $this->assertTrue($crawler->filter('.jumborton)')->count() == 1);

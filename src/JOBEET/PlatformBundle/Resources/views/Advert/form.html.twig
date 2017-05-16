@@ -65,7 +65,7 @@ lorsqu'on saura afficher un formulaire. #}
 	{{ form_row(form.categories) }}
 
 	{# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
-	{{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+	{{ form_widget(form.save, {'attr': {'class': 'btn btn-primary', 'value': 'save'}}) }}
 
   {# Génération automatique des champs pas encore écrits.
      Dans cet exemple, ce serait le champ CSRF (géré automatiquement par Symfony !)

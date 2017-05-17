@@ -34,7 +34,9 @@
         "friendsofsymfony/user-bundle": "dev-master",
         "symfony/assetic-bundle": "^2.7.1",
         "leafo/scssphp": "~0.6",
-        "patchwork/jsqueeze": "~1.0"
+        "patchwork/jsqueeze": "~1.0",
+        "sonata-project/admin-bundle": "^3.18",
+        "sonata-project/doctrine-orm-admin-bundle": "^3.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

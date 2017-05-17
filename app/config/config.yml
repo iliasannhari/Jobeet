@@ -11,7 +11,7 @@ parameters:
 
 framework:
     #esi:             ~
-    #translator:      { fallbacks: ["%locale%"] }
+    translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -71,7 +71,7 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
-    
+
 # Stof\DoctrineExtensionsBundle configuration
 stof_doctrine_extensions:
     orm:
@@ -88,7 +88,15 @@ fos_user:
         address: "noreply@yourcompany.com"
         sender_name: "No Reply"
 
-        
+
 assetic:
-  debug:          '%kernel.debug%'
-  use_controller: '%kernel.debug%'
+    debug:          '%kernel.debug%'
+    use_controller: '%kernel.debug%'
+
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        # enable the SonataAdminBundle block
+        sonata.admin.block.admin_list:
+            contexts: [admin]
+        # ...

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Colors list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for color in colors %}
+            <tr>
+                <td><a href="{{ path('color_show', { 'id': color.id }) }}">{{ color.id }}</a></td>
+                <td>{{ color.name }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('color_show', { 'id': color.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('color_edit', { 'id': color.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('color_new') }}">Create a new color</a>
+        </li>
+    </ul>
+{% endblock %}

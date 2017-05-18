@@ -64,12 +64,23 @@ class AdvertController extends Controller
 
 		$nbPerPage = 7;
 
-		$listAdverts = $this
-		->getDoctrine()
-		->getManager()
-		->getRepository('JOBEETPlatformBundle:Advert')
-		->getAdvertsPage($page, $nbPerPage)
-		;
+
+    $colors = $this
+    ->getDoctrine()
+    ->getManager()
+    ->getRepository('JOBEETPlatformBundle:Color')
+    ->findAll()
+    ;
+
+
+
+
+    $listAdverts = $this
+    ->getDoctrine()
+    ->getManager()
+    ->getRepository('JOBEETPlatformBundle:Advert')
+    ->getAdvertsPage($page, $nbPerPage)
+    ;
     $countAdvert =count($listAdverts);
 		// On calcule le nombre total de pages grâce au count($listAdverts) qui retourne le nombre total d'annonces
     $nbPages = ceil(count($listAdverts) / $nbPerPage);
@@ -86,7 +97,67 @@ class AdvertController extends Controller
      'listAdverts' => $listAdverts,
      'nbPages'     => $nbPages,
      'page'        => $page,
-     'countAdvert' => $countAdvert
+     'countAdvert' => $countAdvert,
+     'colors' => $colors
+     ));
+
+
+ }
+
+
+ /**
+     * @Route("/bycolor/{color}/{page}", name="jobeet_platform_bycolor",defaults={"page" = 1})
+     * 
+     */
+
+ public function indexByColorAction($page, $color)
+ {
+    /*
+    $listAdverts = $this
+    ->getDoctrine()
+    ->getManager()
+    ->getRepository('JOBEETPlatformBundle:Advert')
+    ->getAdvertWithCategories(array('VR', 'FullStack'))
+    ;
+    */
+
+    if ($page < 1) {
+      throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
+    }
+
+    $colors = $this
+    ->getDoctrine()
+    ->getManager()
+    ->getRepository('JOBEETPlatformBundle:Color')
+    ->findAll()
+    ;
+
+    $nbPerPage = 7;
+
+    $listAdverts = $this
+    ->getDoctrine()
+    ->getManager()
+    ->getRepository('JOBEETPlatformBundle:Advert')
+    ->getAdvertsByColorPage($page, $nbPerPage,$color)
+    ;
+    $countAdvert =count($listAdverts);
+    // On calcule le nombre total de pages grâce au count($listAdverts) qui retourne le nombre total d'annonces
+    $nbPages = ceil(count($listAdverts) / $nbPerPage);
+
+     // Si la page n'existe pas, on retourne une 404
+
+
+    if ($nbPages && $page > $nbPages) {
+     throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+   }
+
+
+   return $this->render('JOBEETPlatformBundle:Advert:index.html.twig', array(
+     'listAdverts' => $listAdverts,
+     'nbPages'     => $nbPages,
+     'page'        => $page,
+     'countAdvert' => $countAdvert,
+     'colors' => $colors
      ));
 
 
@@ -136,28 +207,44 @@ class AdvertController extends Controller
    	*/
    	public function addAction( Request $request)
    	{
-
    		$advert = new Advert();
    		$form   = $this->get('form.factory')->create(AdvertType::class, $advert);
 
-   		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-
-   			$em = $this->getDoctrine()->getManager();	
-   			$em->persist($advert);
-   			$em->flush();
-
-   			$request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
-
-   			return $this->redirectToRoute('jobeet_platform_view', array('id' => $advert->getId()));
-   		}
+      $em = $this->getDoctrine()->getManager();
+      $lowColor = $em
+      ->getRepository('JOBEETPlatformBundle:Color')
+      ->findOneBy(array('name' => "Rouge"))
+      ;
 
 
 
-   		return $this->render('JOBEETPlatformBundle:Advert:add.html.twig', array(
-   			'form' => $form->createView(),
-   			));
+      if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+        $advert->setColor($lowColor);       
+        $em->persist($advert);
+        $em->flush();
 
-   	}
+        $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+
+        return $this->redirectToRoute('jobeet_platform_view', array('id' => $advert->getId()));
+      }
+
+
+      $logger = $this->get('logger');
+      $logger->info('I just got the logger');
+      $logger->error('An error occurred');
+
+      $logger->critical('I left the oven on!', array(
+        // include extra "context" info in your logs
+        'cause' => 'in_hurry',
+        ));
+
+
+
+      return $this->render('JOBEETPlatformBundle:Advert:add.html.twig', array(
+        'form' => $form->createView(),
+        ));
+
+    }
 
 
       /**
@@ -202,30 +289,30 @@ class AdvertController extends Controller
 
     public function applyAction( Request $request, $id)
     {
-       $em = $this->getDoctrine()->getManager();
-       $advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
+     $em = $this->getDoctrine()->getManager();
+     $advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
 
-      $application = new Application();
-      $form   = $this->get('form.factory')->create(ApplicationType::class, $application);
+     $application = new Application();
+     $form   = $this->get('form.factory')->create(ApplicationType::class, $application);
 
-      if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-        $application->setAdvert($advert);       
-        $em->persist($advert);
-        $em->persist($application);
-        $em->flush();
+     if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+      $application->setAdvert($advert);       
+      $em->persist($advert);
+      $em->persist($application);
+      $em->flush();
 
-        $request->getSession()->getFlashBag()->add('notice', 'apply bien enregistrée.');
+      $request->getSession()->getFlashBag()->add('notice', 'apply bien enregistrée.');
 
-        return $this->redirectToRoute('jobeet_platform_view', array('id' => $id));
-      }
-
-
-
-      return $this->render('JOBEETPlatformBundle:Advert:apply.html.twig', array(
-        'form' => $form->createView(),
-        ));
-
+      return $this->redirectToRoute('jobeet_platform_view', array('id' => $id));
     }
+
+
+
+    return $this->render('JOBEETPlatformBundle:Advert:apply.html.twig', array(
+      'form' => $form->createView(),
+      ));
+
+  }
 
       /**
       * @Route("/delete/{id}", name="jobeet_platform_delete")

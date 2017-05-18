@@ -90,6 +90,12 @@ class Advert
    */
     private $applications; // Notez le « s », une annonce est liée à plusieurs candidatures
 
+
+    /**
+   * @ORM\ManyToOne(targetEntity="JOBEET\PlatformBundle\Entity\Color")
+   */
+    private $color;
+
     /**
     * @ORM\Column(name="nb_applications", type="integer")
     */
@@ -455,4 +461,28 @@ class Advert
         ;
     }
 }
+
+    /**
+     * Set color
+     *
+     * @param \JOBEET\PlatformBundle\Entity\Color $color
+     *
+     * @return Advert
+     */
+    public function setColor(\JOBEET\PlatformBundle\Entity\Color $color = null)
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * Get color
+     *
+     * @return \JOBEET\PlatformBundle\Entity\Color
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
 }

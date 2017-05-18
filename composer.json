@@ -36,7 +36,8 @@
         "leafo/scssphp": "~0.6",
         "patchwork/jsqueeze": "~1.0",
         "sonata-project/admin-bundle": "^3.18",
-        "sonata-project/doctrine-orm-admin-bundle": "^3.1"
+        "sonata-project/doctrine-orm-admin-bundle": "^3.1",
+        "monolog/monolog": "^1.22"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

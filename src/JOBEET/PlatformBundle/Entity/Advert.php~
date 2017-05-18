@@ -12,6 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use JOBEET\PlatformBundle\Validator\Antiflood;
+
+
 
 /**
  * Advert
@@ -60,7 +63,8 @@ class Advert
      * @var string
      *
      * @ORM\Column(name="content", type="text")
-     * @Assert\Length(min=10)
+     * @Assert\NotBlank()
+     * @Antiflood()
      */
     private $content;
 
@@ -85,6 +89,12 @@ class Advert
    * @ORM\OneToMany(targetEntity="JOBEET\PlatformBundle\Entity\Application", mappedBy="advert")
    */
     private $applications; // Notez le « s », une annonce est liée à plusieurs candidatures
+
+
+    /**
+   * @ORM\ManyToOne(targetEntity="JOBEET\PlatformBundle\Entity\Color")
+   */
+    private $color;
 
     /**
     * @ORM\Column(name="nb_applications", type="integer")
@@ -451,4 +461,28 @@ class Advert
         ;
     }
 }
+
+    /**
+     * Set color
+     *
+     * @param \JOBEET\PlatformBundle\Entity\Color $color
+     *
+     * @return Advert
+     */
+    public function setColor(\JOBEET\PlatformBundle\Entity\Color $color = null)
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * Get color
+     *
+     * @return \JOBEET\PlatformBundle\Entity\Color
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
 }

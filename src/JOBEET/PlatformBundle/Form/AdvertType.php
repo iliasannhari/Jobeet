@@ -31,7 +31,12 @@ class AdvertType extends AbstractType
     ->add('author',    TextType::class)
     ->add('content',   TextareaType::class)
     ->add('image',     ImageType::class,array('required' => false))
-    
+    ->add('color', EntityType::class, array(
+      'class'         => 'JOBEETPlatformBundle:Color',
+      'choice_label'  => 'name',
+      'multiple'      => false,
+      'required' => false,
+      ))
     ->add('categories', EntityType::class, array(
       'class'         => 'JOBEETPlatformBundle:Category',
       'choice_label'  => 'name',

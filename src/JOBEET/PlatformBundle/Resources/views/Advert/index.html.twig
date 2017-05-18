@@ -3,11 +3,24 @@
 {% extends "JOBEETPlatformBundle::layout.html.twig" %}
 
 
+
+
 {% block title %}
   Accueil - {{ parent() }}
 {% endblock %}
 
 {% block jobeetplatform_body %}
+
+  <ul class="nav nav-pills nav-stacked">
+  <li><a href="{{ path('jobeet_platform_home') }}">Tout</a></li>
+  {% for color in colors %}
+    <li>
+      <a href="{{ path('jobeet_platform_bycolor', {'color': color.name}) }}">
+        {{ color.name }}
+      </a>
+    </li>
+  {% endfor %}
+</ul>
 
   <h2>Liste des annonces ({{countAdvert}})</h2>
   <ul>

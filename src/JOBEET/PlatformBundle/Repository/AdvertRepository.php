@@ -66,6 +66,7 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
       ;
 
     }
+    
     public function myFind()
     {
       $qb = $this->createQueryBuilder('a');

@@ -9,6 +9,8 @@ use JOBEET\PlatformBundle\Entity\AdvertSkill;
 
 use JOBEET\PlatformBundle\Form\AdvertType;
 use JOBEET\PlatformBundle\Form\AdvertEditType;
+use JOBEET\PlatformBundle\Form\ApplicationType;
+
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -45,8 +47,8 @@ class AdvertController extends Controller
      * 
      */
 
-	public function indexAction($page)
-	{
+   public function indexAction($page)
+   {
 		/*
 		$listAdverts = $this
 		->getDoctrine()
@@ -68,64 +70,65 @@ class AdvertController extends Controller
 		->getRepository('JOBEETPlatformBundle:Advert')
 		->getAdvertsPage($page, $nbPerPage)
 		;
-
+    $countAdvert =count($listAdverts);
 		// On calcule le nombre total de pages grâce au count($listAdverts) qui retourne le nombre total d'annonces
-		$nbPages = ceil(count($listAdverts) / $nbPerPage);
+    $nbPages = ceil(count($listAdverts) / $nbPerPage);
 
 		 // Si la page n'existe pas, on retourne une 404
-		
-
-		if ($nbPages && $page > $nbPages) {
-			throw $this->createNotFoundException("La page ".$page." n'existe pas.");
-		}
 
 
-		return $this->render('JOBEETPlatformBundle:Advert:index.html.twig', array(
-			'listAdverts' => $listAdverts,
-			'nbPages'     => $nbPages,
-			'page'        => $page
-			));
+    if ($nbPages && $page > $nbPages) {
+     throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+   }
 
-		
-	}
 
-	
+   return $this->render('JOBEETPlatformBundle:Advert:index.html.twig', array(
+     'listAdverts' => $listAdverts,
+     'nbPages'     => $nbPages,
+     'page'        => $page,
+     'countAdvert' => $countAdvert
+     ));
+
+
+ }
+
+
    /**
      * @Route("/view/{id}", name="jobeet_platform_view",requirements={"id" = "\d+"})
      *
      */
-	public function viewAction($id)
-	{
-		
-		$em = $this->getDoctrine()->getManager();
+   public function viewAction($id)
+   {
+
+    $em = $this->getDoctrine()->getManager();
 
     // On récupère l'annonce $id
-		$advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
+    $advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
 
     // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
     // ou null si l'id $id  n'existe pas, d'où ce if :
-		if (null === $advert) {
-			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
-		}
+    if (null === $advert) {
+     throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+   }
 
-		$listApplications = $em
-		->getRepository('JOBEETPlatformBundle:Application')
-		->findBy(array('advert' => $advert))
-		;
+   $listApplications = $em
+   ->getRepository('JOBEETPlatformBundle:Application')
+   ->findBy(array('advert' => $advert))
+   ;
 
 		 // On récupère maintenant la liste des AdvertSkill
-		$listAdvertSkills = $em
-		->getRepository('JOBEETPlatformBundle:AdvertSkill')
-		->findBy(array('advert' => $advert))
-		;
+   $listAdvertSkills = $em
+   ->getRepository('JOBEETPlatformBundle:AdvertSkill')
+   ->findBy(array('advert' => $advert))
+   ;
 
     // Le render ne change pas, on passait avant un tableau, maintenant un objet
-		return $this->render('JOBEETPlatformBundle:Advert:view.html.twig', array(
-			'advert'           => $advert,
-			'listApplications' => $listApplications,
-			'listAdvertSkills' => $listAdvertSkills
-			));
-	}
+   return $this->render('JOBEETPlatformBundle:Advert:view.html.twig', array(
+     'advert'           => $advert,
+     'listApplications' => $listApplications,
+     'listAdvertSkills' => $listAdvertSkills
+     ));
+ }
 
 	  /**
       * @Route("/add", name="jobeet_platform_add")
@@ -162,71 +165,104 @@ class AdvertController extends Controller
       * @Security("has_role('ROLE_AUTEUR')")
       */
 
-   	public function editAction( Request $request, $id)
-   	{
-   		$em = $this->getDoctrine()->getManager();
-   		$advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
+      public function editAction( Request $request, $id)
+      {
+       $em = $this->getDoctrine()->getManager();
+       $advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
 
-   		if (null === $advert) {
-   			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
-   		}
+       if (null === $advert) {
+        throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+      }
 
-   		$form   = $this->get('form.factory')->create(AdvertEditType::class, $advert);
+      $form   = $this->get('form.factory')->create(AdvertEditType::class, $advert);
 
-   		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+      if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 			// Inutile de persister ici, Doctrine connait déjà notre annonce
-   			$em->flush();
+        $em->flush();
 
-   			$request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+        $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
 
-   			return $this->redirectToRoute('jobeet_platform_view', array('id' => $advert->getId()));
-   		}
+        return $this->redirectToRoute('jobeet_platform_view', array('id' => $advert->getId()));
+      }
 
 
 
-   		return $this->render('JOBEETPlatformBundle:Advert:edit.html.twig', array(
-   			'advert' => $advert,
-   			'form' => $form->createView(),
-   			));
+      return $this->render('JOBEETPlatformBundle:Advert:edit.html.twig', array(
+        'advert' => $advert,
+        'form' => $form->createView(),
+        ));
 
-   	}
+    }
+
+
+    /**
+      * @Route("/apply/{id}", name="jobeet_platform_apply")
+      * @Security("has_role('ROLE_AUTEUR')")
+      */
+
+    public function applyAction( Request $request, $id)
+    {
+       $em = $this->getDoctrine()->getManager();
+       $advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
+
+      $application = new Application();
+      $form   = $this->get('form.factory')->create(ApplicationType::class, $application);
+
+      if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+        $application->setAdvert($advert);       
+        $em->persist($advert);
+        $em->persist($application);
+        $em->flush();
+
+        $request->getSession()->getFlashBag()->add('notice', 'apply bien enregistrée.');
+
+        return $this->redirectToRoute('jobeet_platform_view', array('id' => $id));
+      }
+
+
+
+      return $this->render('JOBEETPlatformBundle:Advert:apply.html.twig', array(
+        'form' => $form->createView(),
+        ));
+
+    }
 
       /**
       * @Route("/delete/{id}", name="jobeet_platform_delete")
       * @Security("has_role('ROLE_AUTEUR')")
       */
 
-   	public function deleteAction(Request $request,$id)
-   	{
-   		$em = $this->getDoctrine()->getManager();
+      public function deleteAction(Request $request,$id)
+      {
+       $em = $this->getDoctrine()->getManager();
 
     // On récupère l'annonce $id
-   		$advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
+       $advert = $em->getRepository('JOBEETPlatformBundle:Advert')->find($id);
 
-   		if (null === $advert) {
-   			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
-   		}
+       if (null === $advert) {
+        throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+      }
 
-   		$form = $this->get('form.factory')->create();
+      $form = $this->get('form.factory')->create();
 
-   		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-   			$em->remove($advert);
-   			$em->flush();
-   			$request->getSession()->getFlashBag()->add('info', "L'annonce a bien été supprimée.");
-   			return $this->redirectToRoute('jobeet_platform_home');
-   		}
+      if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+        $em->remove($advert);
+        $em->flush();
+        $request->getSession()->getFlashBag()->add('info', "L'annonce a bien été supprimée.");
+        return $this->redirectToRoute('jobeet_platform_home');
+      }
 
-   		return $this->render('JOBEETPlatformBundle:Advert:delete.html.twig', array(
-   			'advert' => $advert,
-   			'form'   => $form->createView(),
-   			));
-   	}
+      return $this->render('JOBEETPlatformBundle:Advert:delete.html.twig', array(
+        'advert' => $advert,
+        'form'   => $form->createView(),
+        ));
+    }
 
-   	public function menuAction($limit)
-   	{
-   		$em = $this->getDoctrine()->getManager();
+    public function menuAction($limit)
+    {
+     $em = $this->getDoctrine()->getManager();
 
-   		$listAdverts = $em->getRepository('JOBEETPlatformBundle:Advert')->findBy(
+     $listAdverts = $em->getRepository('JOBEETPlatformBundle:Advert')->findBy(
       		array(),                 // Pas de critère
       		array('date' => 'desc'), // On trie par date décroissante
       		$limit,                  // On sélectionne $limit annonces
@@ -234,26 +270,26 @@ class AdvertController extends Controller
       		);
 
 
-   		return $this->render('JOBEETPlatformBundle:Advert:menu.html.twig', array(
+     return $this->render('JOBEETPlatformBundle:Advert:menu.html.twig', array(
       // Tout l'intérêt est ici : le contrôleur passe
       // les variables nécessaires au template !
-   			'listAdverts' => $listAdverts
-   			));
-   	}
-
-   	public function testAction()
-   	{
-   		$repository = $this
-   		->getDoctrine()
-   		->getManager()
-   		->getRepository('JOBEETPlatformBundle:Advert')
-   		;
-
-   		$listAdverts =$repository->myFindAll();
-   	}
-
-
-
-
-
+      'listAdverts' => $listAdverts
+      ));
    }
+
+   public function testAction()
+   {
+     $repository = $this
+     ->getDoctrine()
+     ->getManager()
+     ->getRepository('JOBEETPlatformBundle:Advert')
+     ;
+
+     $listAdverts =$repository->myFindAll();
+   }
+
+
+
+
+
+ }

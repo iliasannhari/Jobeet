@@ -67,6 +67,10 @@
 			<i class="glyphicon glyphicon-trash"></i>
 			Supprimer l'annonce
 		</a>
+		<a href="{{ path('jobeet_platform_apply', {'id': advert.id}) }}" class="btn btn-success">
+			<i class="glyphicon glyphicon-check"></i>
+			Postuler
+		</a>
 	</p>
 
 {% endblock %}
